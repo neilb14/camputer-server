@@ -1,8 +1,10 @@
-import sys, getopt, sqlite3, datetime
+import sys, getopt, random, sqlite3
+from datetime import datetime
 
 SQL_INSERT = 'INSERT INTO SAMPLES (id, value) VALUES (?,?)'
 
 def main(argv):
+    random.seed()
     database_file = ''
     try:
         opts, args = getopt.getopt(argv,"hd:",["dbfile="])
@@ -16,6 +18,9 @@ def main(argv):
         elif opt in ("-d", "--dbfile"):
             database_file = arg
     
+    id = int(datetime.utcnow().strftime('%Y%m%d%H%M%S'))
+    value = int((0.5 - random.random())*100)
+
     conn = sqlite3.connect(database_file)
     c = conn.cursor()
     c.execute(SQL_INSERT, (id,value))

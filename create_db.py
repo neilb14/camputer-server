@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """create_db.py: Create database and a range of dummy data for testing."""
 import os, sys, getopt
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from camputer import db, create_app
 from camputer.models import Temperature

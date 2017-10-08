@@ -10,7 +10,7 @@ class TestDevelopmentConfig(TestCase):
 
     def test_app_is_development(self):
         self.assertFalse(current_app is None)
-        self.assertTrue(current_app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///db/dev.db')
+        self.assertTrue(current_app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///../db/dev.db')
         self.assertTrue(current_app.config['DEBUG'] is True)
 
 
@@ -19,7 +19,7 @@ class TestTestingConfig(TestCase):
         return create_app('camputer.config.TestingConfig')
 
     def test_app_is_testing(self):
-        self.assertTrue(current_app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///db/test.db')
+        self.assertTrue(current_app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///../db/test.db')
         self.assertTrue(current_app.config['DEBUG'])
         self.assertTrue(current_app.config['TESTING'])
 

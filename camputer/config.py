@@ -7,14 +7,14 @@ class BaseConfig:
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db/dev.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/dev.db'
 
 
 class TestingConfig(BaseConfig):
     """Testing configuration"""
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db/test.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/test.db'
 
 
 class ProductionConfig(BaseConfig):

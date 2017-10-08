@@ -1,6 +1,6 @@
 import unittest
 from flask_script import Manager
-from camputer import create_app
+from camputer import create_app, db
 
 app = create_app('camputer.config.DevelopmentConfig')
 manager = Manager(app)

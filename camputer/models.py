@@ -1,11 +1,10 @@
-from sqlalchemy import Column, Integer, String
-from camputer.database import Base
+from camputer import db
 
-class Temperature(Base):
+class Temperature(db.Model):
     __tablename__ = 'temperatures'
-    id = Column(Integer, primary_key=True)
-    timestamp = Column(Integer)
-    value = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.Integer)
+    value = db.Column(db.Integer)
 
     def __init__(self, timestamp=None, value=None):
         self.timestamp = timestamp

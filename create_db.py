@@ -1,21 +1,43 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """create_db.py: Create database and a range of dummy data for testing."""
-import os
+import os, sys, getopt
 from datetime import datetime, timedelta
 
 from camputer import db, create_app
 from camputer.models import Temperature
 
-app = create_app('camputer.config.DevelopmentConfig')
+def main(argv):
+    is_load = False
+    config = 'camputer.config.DevelopmentConfig'
+    help_message = 'create_db.py -l -c <config>\r\nconfig can be:\r\n   camputer.config.DevelopmentConfig (default)\r\n   camputer.config.TestingConfig\r\n   camputer.config.ProductionConfig'
+    try:
+        opts, args = getopt.getopt(argv,"hlc:",["config="])
+    except getopt.GetoptError:
+        print(help_message)
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print(help_message)
+            sys.exit()
+        elif opt == '-l':
+            is_load = True
+        elif opt in ("-c", "--config"):
+            config = arg
 
-print(os.getcwd())
-print(app.config['SQLALCHEMY_DATABASE_URI'])
-db.create_all()
-temperature = Temperature(100, 23)
-temperature2 = Temperature(101, 15)
+    app = create_app(config)
+    db.create_all()
+    if is_load:
+        load_sample_data()
 
-db.session.add(temperature)
-db.session.add(temperature2)
+def load_sample_data():
+    t1 = Temperature(datetime.utcnow(), 23)
+    t2 = Temperature(datetime.utcnow(), 15)
+    t3 = Temperature(datetime.utcnow(), 2)
+    db.session.add(t1)
+    db.session.add(t2)
+    db.session.add(t3)
+    db.session.commit()
 
-db.session.commit()
+if __name__ == "__main__":
+    main(sys.argv[1:])

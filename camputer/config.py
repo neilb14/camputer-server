@@ -16,6 +16,12 @@ class TestingConfig(BaseConfig):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/test.db'
 
+class TravisConfig(BaseConfig):
+    """Travis CI configuration"""
+    DEBUG = False
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""

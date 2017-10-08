@@ -7,8 +7,8 @@ install:
   - pip install -r requirements.txt
 
 before_script:
-  - export APP_SETTINGS="camputer.config.TestingConfig"
-  - python create_db.py -c camputer.config.TestingConfig
+  - export APP_SETTINGS="camputer.config.TravisConfig"
+  - python create_db.py -c camputer.config.TravisConfig
 
 script:
   - python manage.py test

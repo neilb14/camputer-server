@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """samples.py: Generate dummy data for testing."""
 import sys, getopt, random, sqlite3
+sys.path.append('.')
 from datetime import datetime
-
 from camputer import db, create_app
 from camputer.models import Temperature
 

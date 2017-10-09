@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """samples.py: Generate dummy data for testing."""
-import sys, getopt, random, sqlite3
-sys.path.append('.')
+import os, sys, getopt, random, sqlite3
+from os.path import dirname
+sys.path.append(os.path.join(dirname(__file__), os.pardir))
+
 from datetime import datetime
 from camputer import db, create_app
 from camputer.models import Temperature

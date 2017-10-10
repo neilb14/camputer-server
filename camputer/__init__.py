@@ -15,6 +15,8 @@ def create_app(config=None):
     db.init_app(app)
 
     from camputer.views import temperatures_blueprint
+    from camputer.views import humidities_blueprint
     app.register_blueprint(temperatures_blueprint)
+    app.register_blueprint(humidities_blueprint)
 
     return app

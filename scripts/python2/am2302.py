@@ -3,6 +3,7 @@ import sys, getopt, sqlite3, Adafruit_DHT
 from datetime import datetime
 
 SQL_INSERT_TEMPERATURE = "INSERT INTO Temperatures (timestamp, value) VALUES (?,?)"
+SQL_INSERT_HUMIDITY = "INSERT INTO Humidities (timestamp, value) VALUES (?,?)"
 
 def main(argv):
 	help_message = 'am2302.py -p <gpiopin> -d <dbfile>'
@@ -28,6 +29,7 @@ def main(argv):
 		conn = sqlite3.connect(dbfile)
 		c = conn.cursor()
 		c.execute(SQL_INSERT_TEMPERATURE, (datetime.utcnow(), temperature))
+		c.execute(SQL_INSERT_HUMIDITY, (datetime.utcnow(), humidity))
 		conn.commit()
 		conn.close()
 		

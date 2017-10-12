@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
+from datetime import datetime, timedelta
 from camputer.models import Temperature
 from camputer.models import Humidity
 
@@ -12,6 +13,24 @@ def get_temperatures():
         'uom': 'c',
         'value': result.value
     })
+
+@temperatures_blueprint.route('/temperatures', methods=['GET'])
+def get_temperature_range():
+    hours = int(request.args.get('hours'))
+    results = Temperature.query.filter(Temperature.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60)).order_by(Temperature.timestamp.desc()).all()
+    readings = []
+    for result in results:
+        readings.append({
+            'timestamp': result.timestamp,
+            'uom':'c',
+            'value': result.value
+        })
+    return jsonify({
+        'readings': readings,
+        'count': len(readings)
+    })
+
+
 
 humidities_blueprint = Blueprint('humidities', __name__)
 

@@ -25,4 +25,4 @@ class Humidity(db.Model):
         self.value = value
 
     def __repr__(self):
-        return '<Humidity %d at %d>' % (self.value, self.timestamp)
+        return '<Humidity %d at %s>' % (self.value, self.timestamp)

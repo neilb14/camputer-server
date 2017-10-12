@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from tests.base import BaseTestCase
 from camputer import db
 from camputer.models import Humidity
@@ -7,13 +7,13 @@ from camputer.models import Humidity
 class TestHumidityService(BaseTestCase):
     """Tests for the Humidity Service."""
 
+    def add_humidity(self, timestamp=datetime.utcnow(), value=None):
+        db.session.add(Humidity(timestamp, value))
+
     def test_last_humidity_reading(self):
-        h1 = Humidity(datetime.utcnow(), 41.6)
-        h2 = Humidity(datetime.utcnow(), 47.9)
-        h3 = Humidity(datetime.utcnow(), 43.8)
-        db.session.add(h1)
-        db.session.add(h2)
-        db.session.add(h3)
+        self.add_humidity(datetime.utcnow()+timedelta(seconds=-2*60*60), 41.6)
+        self.add_humidity(datetime.utcnow()+timedelta(seconds=-60*60), 47.9)
+        self.add_humidity(datetime.utcnow(), 43.8)
         db.session.commit()
         """Ensure the /humidity/last route behaves correctly."""
         response = self.client.get('/humidities/last')

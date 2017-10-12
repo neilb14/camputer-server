@@ -21,3 +21,18 @@ class TestHumidityService(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(43.8, data['value'])
         self.assertIn('%', data['uom'])
+
+    def test_humidity_range(self):
+        self.add_humidity(datetime.utcnow() + timedelta(seconds=-5*60*60), 10)
+        self.add_humidity(datetime.utcnow() + timedelta(seconds=-4*60*60), 12)
+        self.add_humidity(datetime.utcnow() + timedelta(seconds=-3*60*60), 14)
+        self.add_humidity(datetime.utcnow() + timedelta(seconds=-2*60*60), 16)
+        self.add_humidity(datetime.utcnow() + timedelta(seconds=-60*60), 18)
+        self.add_humidity(datetime.utcnow(), 20)
+        db.session.commit()
+        response = self.client.get('/humidities?hours=3')
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(3, data['count'])
+        self.assertEqual(3, len(data['readings']))
+        self.assertEqual(20, data['readings'][0]['value'])

@@ -31,7 +31,6 @@ def get_temperature_range():
     })
 
 
-
 humidities_blueprint = Blueprint('humidities', __name__)
 
 @humidities_blueprint.route('/humidities/last', methods=['GET'])
@@ -41,4 +40,20 @@ def get_humidities():
         'timestamp': result.timestamp,
         'uom': '%',
         'value': result.value
+    })
+
+@humidities_blueprint.route('/humidities', methods=['GET'])
+def get_humidity_range():
+    hours = int(request.args.get('hours'))
+    results = Humidity.query.filter(Humidity.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60)).order_by(Humidity.timestamp.desc()).all()
+    readings = []
+    for result in results:
+        readings.append({
+            'timestamp': result.timestamp,
+            'uom':'%',
+            'value': result.value
+        })
+    return jsonify({
+        'readings': readings,
+        'count': len(readings)
     })

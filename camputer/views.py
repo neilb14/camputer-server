@@ -9,6 +9,7 @@ temperatures_blueprint = Blueprint('temperatures', __name__)
 def get_temperatures():
     result = Temperature.query.order_by(Temperature.timestamp.desc()).first()
     return jsonify({
+        'id': result.id,
         'timestamp': result.timestamp,
         'uom': 'c',
         'value': result.value
@@ -21,6 +22,7 @@ def get_temperature_range():
     readings = []
     for result in results:
         readings.append({
+            'id': result.id,
             'timestamp': result.timestamp,
             'uom':'c',
             'value': result.value
@@ -37,6 +39,7 @@ humidities_blueprint = Blueprint('humidities', __name__)
 def get_humidities():
     result = Humidity.query.order_by(Humidity.timestamp.desc()).first()
     return jsonify({
+        'id': result.id,
         'timestamp': result.timestamp,
         'uom': '%',
         'value': result.value
@@ -49,6 +52,7 @@ def get_humidity_range():
     readings = []
     for result in results:
         readings.append({
+            'id': result.id,
             'timestamp': result.timestamp,
             'uom':'%',
             'value': result.value

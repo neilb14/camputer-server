@@ -33,6 +33,26 @@ def get_temperature_range():
         'count': len(readings)
     })
 
+@temperatures_blueprint.route('/temperatures', methods=['POST'])
+def add_temperature_reading():
+    post_data = request.get_json()
+    if not post_data:
+        response_object = {'status': 'fail', 'message':'Invalid payload'}
+        return jsonify(response_object), 400
+    value = post_data.get('value')
+    timestamp = datetime.strptime(post_data.get('timestamp'), '%Y-%m-%dT%H:%M:%S.%f')
+
+    temperature = Temperature(timestamp, value)
+    db.session.add(temperature)
+    db.session.commit()
+    
+    return jsonify({
+        'status' : 'success',
+        'message' : 'created'
+    }), 201
+
+
+
 
 humidities_blueprint = Blueprint('humidities', __name__)
 

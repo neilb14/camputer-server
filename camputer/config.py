@@ -15,6 +15,7 @@ class TestingConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/test.db'
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""

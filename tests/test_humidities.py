@@ -36,3 +36,20 @@ class TestHumidityService(BaseTestCase):
         self.assertEqual(3, data['count'])
         self.assertEqual(3, len(data['readings']))
         self.assertEqual(20, data['readings'][0]['value'])
+
+    def test_add_humidity(self):
+        timestamp = datetime.utcnow()
+        response = self.client.post('/humidities',
+                                    data=json.dumps(dict(
+                                            timestamp= timestamp.isoformat(),
+                                            value=12.3
+                                    )),
+                                    content_type='application/json'
+                                )
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual('success', data['status'])
+        reading = Humidity.query.filter(Humidity.timestamp == timestamp).first()
+        self.assertIsNotNone(reading)
+        self.assertEqual(12.3, reading.value)
+

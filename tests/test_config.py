@@ -22,6 +22,7 @@ class TestTestingConfig(TestCase):
         self.assertTrue(current_app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///../db/test.db')
         self.assertTrue(current_app.config['DEBUG'])
         self.assertTrue(current_app.config['TESTING'])
+        self.assertFalse(current_app.config['PRESERVE_CONTEXT_ON_EXCEPTION'])
 
 class TestProductionConfig(TestCase):
     def create_app(self):

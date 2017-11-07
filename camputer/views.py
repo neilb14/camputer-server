@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from datetime import datetime, timedelta
 from camputer.models import Temperature
 from camputer.models import Humidity
+from camputer import db
 
 temperatures_blueprint = Blueprint('temperatures', __name__)
 
@@ -61,3 +62,22 @@ def get_humidity_range():
         'readings': readings,
         'count': len(readings)
     })
+
+@humidities_blueprint.route('/humidities', methods=['POST'])
+def add_humidity_reading():
+    post_data = request.get_json()
+    if not post_data:
+        response_object = {'status': 'fail', 'message':'Invalid payload'}
+        return jsonify(response_object), 400
+    value = post_data.get('value')
+    timestamp = datetime.strptime(post_data.get('timestamp'), '%Y-%m-%dT%H:%M:%S.%f')
+
+    humidity = Humidity(timestamp, value)
+    db.session.add(humidity)
+    db.session.commit()
+    
+    return jsonify({
+        'status' : 'success',
+        'message' : 'created'
+    }), 201
+

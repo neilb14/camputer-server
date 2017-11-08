@@ -7,7 +7,7 @@ sys.path.append(os.path.join(dirname(__file__), os.pardir))
 
 from datetime import datetime, timedelta
 from camputer import db, create_app
-from camputer.models import Temperature
+from camputer.models.temperature import Temperature
 
 def main(argv):
     random.seed()

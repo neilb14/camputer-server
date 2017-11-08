@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from tests.base import BaseTestCase
 from camputer import db
-from camputer.models import Temperature
+from camputer.models.temperature import Temperature
 
 class TestTemperaturesService(BaseTestCase):
     """Tests for the Temperatures Service."""

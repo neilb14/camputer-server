@@ -3,7 +3,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
 
-
 db = SQLAlchemy()
 
 def create_app(config=None):
@@ -17,8 +16,8 @@ def create_app(config=None):
     db.app = app
     db.init_app(app)
 
-    from camputer.views import temperatures_blueprint
-    from camputer.views import humidities_blueprint
+    from camputer.views.temperatures_blueprint import temperatures_blueprint
+    from camputer.views.humidities_blueprint import humidities_blueprint
     app.register_blueprint(temperatures_blueprint)
     app.register_blueprint(humidities_blueprint)
 

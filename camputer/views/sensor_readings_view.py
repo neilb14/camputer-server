@@ -1,13 +1,13 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime, timedelta
-from camputer.models.temperature import Temperature
+from camputer.models.sensor_reading import SensorReading
 from camputer import db
 
-temperatures_blueprint = Blueprint('temperatures', __name__)
+sensor_readings_blueprint = Blueprint('sensor_readings', __name__)
 
-@temperatures_blueprint.route('/temperatures/last', methods=['GET'])
-def get_temperatures():
-    result = Temperature.query.order_by(Temperature.timestamp.desc()).first()
+@sensor_readings_blueprint.route('/sensorreadings/last', methods=['GET'])
+def get_sensor_readings():
+    result = SensorReading.query.order_by(SensorReading.timestamp.desc()).first()
     return jsonify({
         'id': result.id,
         'timestamp': result.timestamp,
@@ -15,10 +15,10 @@ def get_temperatures():
         'value': result.value
     })
 
-@temperatures_blueprint.route('/temperatures', methods=['GET'])
-def get_temperature_range():
+@sensor_readings_blueprint.route('/sensorreadings', methods=['GET'])
+def get_sensor_reading_range():
     hours = int(request.args.get('hours'))
-    results = Temperature.query.filter(Temperature.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60)).order_by(Temperature.timestamp.desc()).all()
+    results = SensorReading.query.filter(SensorReading.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60)).order_by(SensorReading.timestamp.desc()).all()
     readings = []
     for result in results:
         readings.append({
@@ -32,8 +32,8 @@ def get_temperature_range():
         'count': len(readings)
     })
 
-@temperatures_blueprint.route('/temperatures', methods=['POST'])
-def add_temperature_reading():
+@sensor_readings_blueprint.route('/sensorreadings', methods=['POST'])
+def add_sensor_reading_reading():
     post_data = request.get_json()
     if not post_data:
         response_object = {'status': 'fail', 'message':'Invalid payload'}
@@ -41,7 +41,7 @@ def add_temperature_reading():
     value = post_data.get('value')
     timestamp = datetime.strptime(post_data.get('timestamp'), '%Y-%m-%dT%H:%M:%S.%f')
 
-    temperature = Temperature(timestamp, value)
+    temperature = SensorReading('temperature', timestamp, value)
     db.session.add(temperature)
     db.session.commit()
     

@@ -5,7 +5,7 @@ import os, sys, getopt
 from datetime import datetime
 
 from camputer import db, create_app
-from camputer.models import Temperature
+from camputer.models.sensor_reading import SensorReading
 
 def main(argv):
     is_load = False
@@ -31,9 +31,9 @@ def main(argv):
         load_sample_data()
 
 def load_sample_data():
-    t1 = Temperature(datetime.utcnow(), 23)
-    t2 = Temperature(datetime.utcnow(), 15)
-    t3 = Temperature(datetime.utcnow(), 2)
+    t1 = SensorReading('temperature', datetime.utcnow(), 23)
+    t2 = SensorReading('temperature', datetime.utcnow(), 15)
+    t3 = SensorReading('temperature', datetime.utcnow(), 2)
     db.session.add(t1)
     db.session.add(t2)
     db.session.add(t3)

@@ -7,7 +7,7 @@ sys.path.append(os.path.join(dirname(__file__), os.pardir))
 
 from datetime import datetime, timedelta
 from camputer import db, create_app
-from camputer.models.temperature import Temperature
+from camputer.models.sensor_reading import SensorReading
 
 def main(argv):
     random.seed()
@@ -30,7 +30,7 @@ def main(argv):
     value = random.gauss(16, 2)
     timestamp = datetime.utcnow() - timedelta(hours=3)
     while(timestamp <= datetime.utcnow()):
-        t = Temperature(timestamp, value)
+        t = SensorReading('temperature',timestamp, value)
         db.session.add(t)
         timestamp = timestamp + timedelta(minutes=5)
         value = random.gauss(value, 2)

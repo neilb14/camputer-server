@@ -16,7 +16,7 @@ class TestSensorReadingService(BaseTestCase):
         self.add_sensor_reading(datetime.utcnow(), 30)
         db.session.commit()
         """Ensure the /temperature/last route behaves correctly."""
-        response = self.client.get('/sensorreadings/last')
+        response = self.client.get('/sensorreadings/last?name=temperature')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(30, data['value'])
@@ -30,17 +30,18 @@ class TestSensorReadingService(BaseTestCase):
         self.add_sensor_reading(datetime.utcnow() + timedelta(seconds=-60*60), 18)
         self.add_sensor_reading(datetime.utcnow(), 20)
         db.session.commit()
-        response = self.client.get('/sensorreadings?hours=3')
+        response = self.client.get('/sensorreadings?name=temperature&hours=3')
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(3, data['count'])
         self.assertEqual(3, len(data['readings']))
         self.assertEqual(20, data['readings'][0]['value'])
 
-    def test_add_sensor_reading(self):
+    def test_add_temperature_sensor_reading(self):
         timestamp = datetime.utcnow()
         response = self.client.post('/sensorreadings',
                                     data=json.dumps(dict(
+                                            name= 'temperature',
                                             timestamp= timestamp.isoformat(),
                                             value=12.3
                                     )),
@@ -49,7 +50,30 @@ class TestSensorReadingService(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 201)
         self.assertEqual('success', data['status'])
-        reading = SensorReading.query.filter(SensorReading.timestamp == timestamp).first()
+        reading = SensorReading.query\
+                        .filter(SensorReading.timestamp == timestamp)\
+                        .filter(SensorReading.name == 'temperature')\
+                        .first()
+        self.assertIsNotNone(reading)
+        self.assertEqual(12.3, reading.value)
+
+    def test_add_any_sensor_reading(self):
+        timestamp = datetime.utcnow()
+        response = self.client.post('/sensorreadings',
+                                    data=json.dumps(dict(
+                                            name= 'blow at high dough',
+                                            timestamp= timestamp.isoformat(),
+                                            value=12.3
+                                    )),
+                                    content_type='application/json'
+                                )
+        data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual('success', data['status'])
+        reading = SensorReading.query\
+                        .filter(SensorReading.timestamp == timestamp)\
+                        .filter(SensorReading.name == 'blow at high dough')\
+                        .first()
         self.assertIsNotNone(reading)
         self.assertEqual(12.3, reading.value)
 

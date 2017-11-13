@@ -7,7 +7,10 @@ sensor_readings_blueprint = Blueprint('sensor_readings', __name__)
 
 @sensor_readings_blueprint.route('/sensorreadings/last', methods=['GET'])
 def get_sensor_readings():
-    result = SensorReading.query.order_by(SensorReading.timestamp.desc()).first()
+    result = SensorReading.query\
+                .filter(SensorReading.name == request.args.get('name'))\
+                .order_by(SensorReading.timestamp.desc())\
+                .first()
     return jsonify({
         'id': result.id,
         'timestamp': result.timestamp,
@@ -18,7 +21,12 @@ def get_sensor_readings():
 @sensor_readings_blueprint.route('/sensorreadings', methods=['GET'])
 def get_sensor_reading_range():
     hours = int(request.args.get('hours'))
-    results = SensorReading.query.filter(SensorReading.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60)).order_by(SensorReading.timestamp.desc()).all()
+    name = request.args.get('name')
+    results = SensorReading.query\
+                .filter(SensorReading.name == name)\
+                .filter(SensorReading.timestamp >= datetime.utcnow() - timedelta(seconds=hours*60*60))\
+                .order_by(SensorReading.timestamp.desc())\
+                .all()
     readings = []
     for result in results:
         readings.append({
@@ -41,7 +49,7 @@ def add_sensor_reading_reading():
     value = post_data.get('value')
     timestamp = datetime.strptime(post_data.get('timestamp'), '%Y-%m-%dT%H:%M:%S.%f')
 
-    temperature = SensorReading('temperature', timestamp, value)
+    temperature = SensorReading(post_data.get('name'), timestamp, value)
     db.session.add(temperature)
     db.session.commit()
     

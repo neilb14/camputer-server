@@ -4,6 +4,11 @@ class BaseConfig:
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+class FlaskScriptConfig(BaseConfig):
+    """Development configuration"""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db/dev.db'
+
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
     DEBUG = True

@@ -30,7 +30,7 @@ def main(argv):
     value = random.gauss(16, 2)
     timestamp = datetime.utcnow() - timedelta(hours=3)
     while(timestamp <= datetime.utcnow()):
-        t = SensorReading('temperature',timestamp, value)
+        t = SensorReading('temperature',timestamp, value, 'c')
         db.session.add(t)
         timestamp = timestamp + timedelta(minutes=5)
         value = random.gauss(value, 2)

@@ -14,7 +14,7 @@ def get_sensor_readings():
     return jsonify({
         'id': result.id,
         'timestamp': result.timestamp,
-        'uom': 'c',
+        'uom': result.uom,
         'value': result.value
     })
 
@@ -32,7 +32,7 @@ def get_sensor_reading_range():
         readings.append({
             'id': result.id,
             'timestamp': result.timestamp,
-            'uom':'c',
+            'uom': result.uom,
             'value': result.value
         })
     return jsonify({
@@ -49,8 +49,8 @@ def add_sensor_reading_reading():
     value = post_data.get('value')
     timestamp = datetime.strptime(post_data.get('timestamp'), '%Y-%m-%dT%H:%M:%S.%f')
 
-    temperature = SensorReading(post_data.get('name'), timestamp, value)
-    db.session.add(temperature)
+    reading = SensorReading(post_data.get('name'), timestamp, value, post_data.get('uom'))
+    db.session.add(reading)
     db.session.commit()
     
     return jsonify({

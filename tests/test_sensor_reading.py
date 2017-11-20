@@ -8,7 +8,7 @@ class TestSensorReadingService(BaseTestCase):
     """Tests for the Sensor Reading Service."""
 
     def add_sensor_reading(self, timestamp=datetime.utcnow(), value=None): 
-        db.session.add(SensorReading('temperature', timestamp, value))
+        db.session.add(SensorReading('temperature', timestamp, value, 'f'))
 
     def test_last_temperature_reading(self):
         self.add_sensor_reading(datetime.utcnow() + timedelta(seconds=-2*60*60), 10)
@@ -20,7 +20,7 @@ class TestSensorReadingService(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(30, data['value'])
-        self.assertIn('c', data['uom'])
+        self.assertIn('f', data['uom'])
 
     def test_temperature_range(self):
         self.add_sensor_reading(datetime.utcnow() + timedelta(seconds=-5*60*60), 10)
@@ -43,7 +43,8 @@ class TestSensorReadingService(BaseTestCase):
                                     data=json.dumps(dict(
                                             name= 'temperature',
                                             timestamp= timestamp.isoformat(),
-                                            value=12.3
+                                            value=12.3,
+                                            uom= 'f'
                                     )),
                                     content_type='application/json'
                                 )
@@ -56,6 +57,7 @@ class TestSensorReadingService(BaseTestCase):
                         .first()
         self.assertIsNotNone(reading)
         self.assertEqual(12.3, reading.value)
+        self.assertEqual('f', reading.uom)
 
     def test_add_any_sensor_reading(self):
         timestamp = datetime.utcnow()
@@ -63,7 +65,8 @@ class TestSensorReadingService(BaseTestCase):
                                     data=json.dumps(dict(
                                             name= 'blow at high dough',
                                             timestamp= timestamp.isoformat(),
-                                            value=12.3
+                                            value=12.3,
+                                            uom= '%'
                                     )),
                                     content_type='application/json'
                                 )
@@ -76,4 +79,5 @@ class TestSensorReadingService(BaseTestCase):
                         .first()
         self.assertIsNotNone(reading)
         self.assertEqual(12.3, reading.value)
+        self.assertEqual('%', reading.uom)
 

@@ -42,7 +42,7 @@ def get_sensor_reading_range():
 
 @sensor_readings_blueprint.route('/sensorreadings', methods=['POST'])
 def add_sensor_reading_reading():
-    post_data = request.get_json()
+    post_data = request.get_json(force=True)
     if not post_data:
         response_object = {'status': 'fail', 'message':'Invalid payload'}
         return jsonify(response_object), 400

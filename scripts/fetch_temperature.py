@@ -24,6 +24,7 @@ def main(argv):
     print('Using Url [{0}]'.format(url))
     r = requests.get('https://api.darksky.net/forecast/{0}/53.544,-113.4909?units=ca'.format(key))
     reading = r.json()["currently"]["temperature"]
+    print('== Reading:[{0}]'.format(reading))
 
     result = requests.post('{0}/sensorreadings'.format(url), json.dumps({
         "name": "darksky",
@@ -31,6 +32,8 @@ def main(argv):
         "value": reading,
         "uom": "c"    
     }))
+    print('== Status Code: [{0}]'.format(result.status_code))
+    print('== [{0}]'.format(result.text))
 
 
 if __name__ == "__main__":

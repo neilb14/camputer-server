@@ -21,12 +21,12 @@ def main(argv):
         elif opt in ("-k", "--key"):
             key = arg
     
-    print(f'Using Key [{key}]')
-    print(f'Using Url [{url}]')
-    r = requests.get(f'https://api.darksky.net/forecast/{key}/53.544,-113.4909?units=ca')
+    print('Using Key [{0}]'.format(key))
+    print('Using Url [{0}]'.format(url))
+    r = requests.get('https://api.darksky.net/forecast/{0}/53.544,-113.4909?units=ca'.format(key))
     reading = r.json()["currently"]["temperature"]
 
-    result = requests.post(f'{url}/sensorreadings', json.dumps({
+    result = requests.post('{0}/sensorreadings'.format(url), json.dumps({
         "name": "darksky",
         "timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f'),
         "value": reading,

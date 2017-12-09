@@ -12,7 +12,6 @@ def main(argv):
         print(help_message)
         sys.exit(2)
     for opt, arg in opts:
-        print(f'== {opt}|{arg}')
         if opt == '-h':
             print(help_message)
             sys.exit()

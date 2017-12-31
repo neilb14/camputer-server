@@ -9,6 +9,16 @@ from datetime import datetime, timedelta
 from camputer import db, create_app
 from camputer.models.sensor_reading import SensorReading
 
+def create_readings(name, start, dev):
+    value = random.gauss(start, dev)
+    timestamp = datetime.utcnow() - timedelta(hours=3)
+    while(timestamp <= datetime.utcnow()):
+        t = SensorReading(name,timestamp, value, 'c')
+        db.session.add(t)
+        timestamp = timestamp + timedelta(minutes=5)
+        value = random.gauss(value, dev)
+    db.session.commit()
+
 def main(argv):
     random.seed()
     config = 'camputer.config.DevelopmentConfig'
@@ -26,15 +36,10 @@ def main(argv):
             config = arg
     
     app = create_app(config)
-
-    value = random.gauss(16, 2)
-    timestamp = datetime.utcnow() - timedelta(hours=3)
-    while(timestamp <= datetime.utcnow()):
-        t = SensorReading('temperature',timestamp, value, 'c')
-        db.session.add(t)
-        timestamp = timestamp + timedelta(minutes=5)
-        value = random.gauss(value, 2)
-    db.session.commit()
+    create_readings('temperature',16,2)
+    create_readings('outside',0,4)
+    create_readings('darksky',0,4)
+    
 
 if __name__ == "__main__":
     main(sys.argv[1:])

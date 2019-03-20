@@ -97,3 +97,33 @@ Finally test it out:
 ```bash
 $ curl localhost/api/sensorreadings/last?name=temperature
 ```
+# Enable sensors
+## Enable the DS18B20 temperature sensor
+[From the Adafruit DS18B20 Guide](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/ds18b20)
+Plug the temperature wire into GPIO4 (jumper 7)
+```bash
+$ sudo vi /boot/config.txt
+```
+Add the following at the bottom of that file:
+```bash
+dtoverlay=w1-gpio
+```
+Then reboot.
+
+```bash
+$ sudo modprobe w1-gpio
+$ sudo modprobe w1-therm
+$ cd /sys/bus/w1/devices
+$ ls
+$ cd 28-xxxx (change this to match what serial number pops up)
+$ cat w1_slave
+```
+Should see a temperature reading.
+
+Next run the python script (note, only runs with Python 2):
+```bash
+$ cd ~/camputer-server/scripts
+$ python2 ds18b20.py
+$ curl localhost/api/sensorreadings/last?name=outside 
+```
+And should see the sensor reading inserted into the database from the script.

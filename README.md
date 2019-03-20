@@ -98,6 +98,14 @@ Finally test it out:
 $ curl localhost/api/sensorreadings/last?name=temperature
 ```
 # Enable sensors
+Best to update the pi and firmware:
+
+```bash
+$ sudo apt-get upgrade
+$ sudo apt-get install rpi-update
+$ sudo rpi-update
+```
+
 ## Enable the DS18B20 temperature sensor
 [From the Adafruit DS18B20 Guide](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/ds18b20)
 Plug the temperature wire into GPIO4 (jumper 7)
@@ -127,3 +135,26 @@ $ python2 ds18b20.py
 $ curl localhost/api/sensorreadings/last?name=outside 
 ```
 And should see the sensor reading inserted into the database from the script.
+
+## Enable the AM2302 temperature, humidity sensor
+[Follow ModMyPi instructions](https://www.modmypi.com/blog/am2302-temphumidity-sensor) to install the Adafruit_Python_DHT libraries.
+
+If you plug the sensor wire into GPIO17 (jumper 11) then no parameters are required to run the script:
+```bash
+$ cd ~/camputer-server/scripts/python2
+$ python2 am2302.py
+```
+Should print a temperature and humidity reading. Also will write a record to the database. 
+```bash
+$ curl localhost/api/sensorreadings/last?name=temperature
+$ curl localhost/api/sensorreadings/last?name=humidity
+```
+Should return readings from running the script previously.
+
+## Run scripts automatically through cron
+
+crontab can look like:
+```bash
+*/5 * * * * python2 /home/pi/camputer-server/scripts/python2/ds18b20.py
+*/5 * * * * python2 /home/pi/camputer-server/scripts/python2/am2302.py
+```

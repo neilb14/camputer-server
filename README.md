@@ -151,10 +151,19 @@ $ curl localhost/api/sensorreadings/last?name=humidity
 ```
 Should return readings from running the script previously.
 
+## Darksky Weather
+Script grabs the current weather from Darksky API:
+
+```bash
+$ python3 fetch_temperature.py -k DARKSKY_API_KEY -u http://localhost:8080
+```
+
 ## Run scripts automatically through cron
 
 crontab can look like:
 ```bash
 */5 * * * * python2 /home/pi/camputer-server/scripts/python2/ds18b20.py
 */5 * * * * python2 /home/pi/camputer-server/scripts/python2/am2302.py
+*/15 * * * * python3 fetch_temperature.py -k DARKSKY_API_KEY -u http://localhost:8080
 ```
+

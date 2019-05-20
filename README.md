@@ -158,12 +158,20 @@ Script grabs the current weather from Darksky API:
 $ python3 fetch_temperature.py -k DARKSKY_API_KEY -u http://localhost:8080
 ```
 
+## Core Temperature
+Script to grab the core temperature of the Pi. The upper temperature limit for the Pi is 85C.
+
+```bash
+$ python3 core_temperature.py
+```
+
 ## Run scripts automatically through cron
 
 crontab can look like:
 ```bash
 */5 * * * * python2 /home/pi/camputer-server/scripts/python2/ds18b20.py
 */5 * * * * python2 /home/pi/camputer-server/scripts/python2/am2302.py
+*/5 * * * * python3 /home/pi/camputer-server/scripts/core_temperature.py
 */15 * * * * python3 fetch_temperature.py -k DARKSKY_API_KEY -u http://localhost:8080
 ```
 

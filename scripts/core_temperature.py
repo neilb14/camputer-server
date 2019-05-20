@@ -19,8 +19,7 @@ def main(argv):
 		elif opt in ("-d", "--dbfile"):
 			dbfile = arg
 
-	#result = os.popen("vcgencmd measure_temp").readline()
-	result = "temp=21.3'C"
+	result = os.popen("vcgencmd measure_temp").readline()
 	coreTemp = None
 	if result is not None and result != "":
 	    coreTemp = float(re.sub("\'C", "", re.sub("^temp=", "", result)))
